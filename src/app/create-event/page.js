@@ -35,7 +35,7 @@ function CreateEvent() {
     };
 
     try {
-      const res = await fetch("/api/create-event", {
+      const res = await fetch("/api/create-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newEvent),

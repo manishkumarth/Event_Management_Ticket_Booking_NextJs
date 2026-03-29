@@ -30,7 +30,7 @@ function Login() {
         console.log("signIn",res)
         if (res?.ok) {
             toast.success("Login success")
-            router.push("/profile") // ✅ redirect
+            router.push("/profile") 
         } else {
             toast.error("Login failed")
         }
