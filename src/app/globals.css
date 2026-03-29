@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* globals.css */
+
+@layer base {
+    
+  }
+  
+  /* Make sure content is above video */
+  main,
+  header,
+  footer {
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Optional: better mobile experience */
+  @media (max-width: 640px) {
+    video {
+      object-position: center 30%; /* focus more on top part if needed */
+    }
+  }
