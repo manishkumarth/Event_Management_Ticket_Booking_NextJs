@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import { NextResponse } from "next/server";
 import BookedTicket from "@/models/Tickets";
 import { getToken } from "next-auth/jwt";
@@ -67,7 +67,7 @@ export async function POST(req) {
     );
   }
 }
-=======
+
 export async function POST(req) {
     try {
       const orderId = "order_" + Date.now();
