@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
+<<<<<<< HEAD
 import { authOption } from "@/app/api/auth/[...nextauth]/options";  
 import { connectDB } from "@/lib/db";
 import Events from "@/models/Events";
@@ -16,13 +17,33 @@ export async function POST(req) {
         });
         
         if (!token || !token.id) {
+=======
+import { authOption } from "@/app/api/auth/[...nextauth]/options";   // ← Change this path to your actual auth route
+import { connectDB } from "@/lib/db";
+import Events from "@/models/Events";
+
+export async function POST(req) {
+    try {
+        // Step 1: Check if user is logged in
+        const session = await getServerSession(authOption);
+
+        if (!session || !session.user) {
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
             return NextResponse.json(
                 { message: "Unauthorized. Please login first." },
                 { status: 401 }
             );
         }
+<<<<<<< HEAD
         
         const userId = token.id;  
+=======
+
+        // Step 2: Get user ID from session
+        const userId = session.user.id;        // Best way (if you added id in session)
+        // Alternative: const userId = session.user.email;  // if you don't have id
+
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
         // Step 3: Connect to Database
         await connectDB();
 
@@ -39,7 +60,10 @@ export async function POST(req) {
             totalSeats,
             category,
             image,
+<<<<<<< HEAD
             coupan,
+=======
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
         } = body;
 
         // Basic validation
@@ -49,7 +73,11 @@ export async function POST(req) {
                 { status: 400 }
             );
         }
+<<<<<<< HEAD
        
+=======
+
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
         // Step 5: Create new event with organizerId
         const newEvent = new Events({
             title,
@@ -62,8 +90,12 @@ export async function POST(req) {
             availableSeats: Number(totalSeats) || 0,
             category,
             image,
+<<<<<<< HEAD
             organizerId: userId,
             coupan           // ← This is how you get logged-in user ID
+=======
+            organizerId: userId,           // ← This is how you get logged-in user ID
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
         });
 
         const savedEvent = await newEvent.save();

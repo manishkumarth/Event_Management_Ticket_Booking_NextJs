@@ -55,9 +55,12 @@ export default function Navbar() {
 
             </div>
           </div>
+<<<<<<< HEAD
           <Link href="/admin/dashboard/" >
           Dashboard
           </Link>
+=======
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
 
           {/* Desktop Right Side */}
           <div className="hidden md:flex items-center gap-4">

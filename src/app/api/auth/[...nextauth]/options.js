@@ -35,6 +35,7 @@ export const authOption = {
             async authorize(credentials) {
                 try {
                     await connectDB()
+<<<<<<< HEAD
 
                     console.log("credentials:", credentials)
 
@@ -42,38 +43,72 @@ export const authOption = {
                     const email = credentials?.email
                     const password = credentials?.password
 
+=======
+            
+                    console.log("credentials:", credentials)
+            
+                    //  extract only needed fields
+                    const email = credentials?.email
+                    const password = credentials?.password
+            
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
                     if (!email || !password) {
                         console.log("Missing email/password")
                         return null
                     }
+<<<<<<< HEAD
 
                     const user = await User.findOne({ email })
                     console.log("user:", user)
 
+=======
+            
+                    const user = await User.findOne({ email })
+                    console.log("user:", user)
+            
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
                     if (!user) {
                         console.log("User not found")
                         return null
                     }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
                     if (!user.password) {
                         console.log("OAuth user")
                         return null
                     }
+<<<<<<< HEAD
 
                     const isMatch = await bcrypt.compare(password, user.password)
 
+=======
+            
+                    const isMatch = await bcrypt.compare(password, user.password)
+            
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
                     if (!isMatch) {
                         console.log("Wrong password")
                         return null
                     }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
                     return {
                         id: user._id.toString(),
                         name: user.name,
                         email: user.email,
                         role: user.role,
                     }
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
                 } catch (error) {
                     console.error("AUTH ERROR:", error)
                     return null
@@ -152,6 +187,7 @@ export const authOption = {
                 session.user.role = token.role
                 session.user.provider = token.provider
             }
+<<<<<<< HEAD
 
             return session
         },
@@ -159,11 +195,23 @@ export const authOption = {
         // async redirect({ url, baseUrl }) {
         //     return baseUrl + "/profile"
         // }
+=======
+            return session
+        },
+        //  Redirect
+                // async redirect({ url, baseUrl }) {
+                //     return baseUrl + "/profile"
+                // }
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
     },
 
     session: {
         strategy: "jwt",
     },
 
+<<<<<<< HEAD
     secret: process.env.NEXTAUTH_SECRET,
+=======
+    secret: process.env.NEXTAUTH_SECRET ,
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
 }

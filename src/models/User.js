@@ -29,11 +29,15 @@ const userSchema = new mongoose.Schema(
     profilePic: {
       type: String,
     },
+<<<<<<< HEAD
    role:{
     type:String,
     enum:["user","admin"],
     required:true,
    },
+=======
+
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
     authProvider: {
       type: String,
       enum: ["local", "google", "email","github"],

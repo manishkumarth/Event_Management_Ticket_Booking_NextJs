@@ -9,11 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@cashfreepayments/cashfree-js": "^1.0.7",
     "@react-oauth/google": "^0.13.4",
     "@yudiel/react-qr-scanner": "^2.5.1",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.38.0",
+=======
+    "@react-oauth/google": "^0.13.4",
+    "@yudiel/react-qr-scanner": "^2.5.1",
+    "bcryptjs": "^3.0.3",
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
     "google-auth-library": "^10.6.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.23.0",

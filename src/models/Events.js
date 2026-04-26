@@ -56,10 +56,13 @@ const eventSchema = new mongoose.Schema(
       ref: "User",            
       required: true,
     },
+<<<<<<< HEAD
     coupan:{
       type:Number,
       sparse:true,
     }
+=======
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
   },
   { 
     timestamps: true          

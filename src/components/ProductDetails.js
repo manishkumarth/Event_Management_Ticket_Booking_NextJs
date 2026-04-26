@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 import { useEffect, useState } from "react";
 import Payment from "./Payment";
@@ -321,3 +322,17 @@ function ProductDetails({ id }) {
 }
 
 export default ProductDetails;
+=======
+async function ProductDetails({ id }) {
+
+    console.log("id is: ", id)
+    const res = await fetch(`http://localhost:3000/api/get-product/${id}`);
+    const data = await res.json();
+    return (
+        <>
+            this is detials page
+        </>
+    )
+}
+export default ProductDetails
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747

@@ -29,13 +29,20 @@ export async function GET(request, { params }) {
     return NextResponse.json({
       message: "success",
       data: singleProduct,
+<<<<<<< HEAD
       
+=======
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
     });
 
   } catch (error) {
     console.error("Error fetching product:", error);
     return NextResponse.json(
+<<<<<<< HEAD
       { message: "Server error"},
+=======
+      { message: "Server error", error: error.message },
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
       { status: 500 }
     );
   }

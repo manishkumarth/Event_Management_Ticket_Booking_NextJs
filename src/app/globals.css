@@ -21,9 +21,12 @@
     video {
       object-position: center 30%; /* focus more on top part if needed */
     }
+<<<<<<< HEAD
   }
 
   button{
     margin: 0;
     padding: 0;
+=======
+>>>>>>> cdcbcdc6bb44fdf9f27407369c3a455c252af747
   }
