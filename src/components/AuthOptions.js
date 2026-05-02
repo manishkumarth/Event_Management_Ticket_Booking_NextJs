@@ -13,7 +13,7 @@ export default function AuthOptions() {
      
 
       <div style={{ padding: "50px", fontFamily: "sans-serif" }} className="flex justify-center flex-col gap-5">
-        <div
+        {/* <div
           onClick={() => signIn("github")}
           className="flex gap-4 border rounded-md px-4 py-2 bg-gray-800 cursor-pointer"
         >
@@ -22,7 +22,7 @@ export default function AuthOptions() {
             width="20"
           />
           Sign in with GitHub
-        </div>
+        </div> */}
 
         <div onClick={() => signIn("google")}
           className="flex gap-4 border rounded-md px-4 py-2 bg-sky-100 cursor-pointer">
