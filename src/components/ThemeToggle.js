@@ -14,7 +14,7 @@ export default function ThemeToggle() {
           onChange={(e) => setTheme(e.target.value)}
         >
           <option value="light">Light</option>
-          <option value="dark" selected >Dark</option>
+          <option value="dark">Dark</option>
           <option value="cupcake">Cupcake</option>
           <option value="bumblebee">Bumblebee</option>
           <option value="dracula">dracula</option>
