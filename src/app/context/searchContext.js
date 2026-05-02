@@ -1,15 +1,28 @@
-"use client"
-const { createContext, useState } = require("react");
+"use client";
 
-export const SearchContext=createContext();
+import { createContext, useState } from "react";
 
-function SearchConProvider({children}){
-    const [searchEvent, setSearchEvent]=useState("");
-    const [isSearch,setIsSearch]=useState(false);
-    return(
-        <SearchContext.Provider value={{searchEvent, setSearchEvent,isSearch,setIsSearch}}>
+export const SearchContext = createContext();
+
+function SearchConProvider({ children }) {
+    const [searchEvent, setSearchEvent] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState(""); // New: For category filter
+    const [isSearch, setIsSearch] = useState(false);
+
+    return (
+        <SearchContext.Provider 
+            value={{
+                searchEvent,
+                setSearchEvent,
+                selectedCategory,
+                setSelectedCategory,
+                isSearch,
+                setIsSearch
+            }}
+        >
             {children}
         </SearchContext.Provider>
-    )
+    );
 }
-export default SearchConProvider
+
+export default SearchConProvider;
