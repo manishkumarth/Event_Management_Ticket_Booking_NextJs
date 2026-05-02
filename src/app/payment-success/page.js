@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
 
 function PaymentSuccessContent() {
