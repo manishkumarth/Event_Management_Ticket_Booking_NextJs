@@ -80,7 +80,7 @@ function SignUp() {
                                         Password
                                     </label>
                                     <div className="text-sm">
-                                        <Link href="forget-password" className="font-semibold text-indigo-400 hover:text-indigo-300">
+                                        <Link href="forget-password" className="font-semibold text-indigo-400 hover:text-indigo-300" disabled >
                                             Forgot password?
                                         </Link>
                                     </div>
