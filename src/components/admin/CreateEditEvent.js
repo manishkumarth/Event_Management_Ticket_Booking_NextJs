@@ -91,13 +91,14 @@ function CreateEditEvent({ action, id }) {
           body: JSON.stringify(newEvent),
         });
         const data = await res.json();
-        if (res.ok) {
+        console.log("datas",data)
+        if (data) {
           if (action === "create") {
             // alert(" Event created successfully!");
-            toast.success("Event created successfully!")
+            toast.success("Event created successfully!" || data.message)
           } else if (action === "edit") {
             // alert(" Event update successfully!");
-            toast.success("Event update successfully!")
+            toast.success("Event update successfully!" || data.message)
           }
           // Reset form
           setEvent({
