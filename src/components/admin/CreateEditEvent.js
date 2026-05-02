@@ -282,6 +282,10 @@ function CreateEditEvent({ action, id }) {
                   <option value="">Select Category</option>
                   <option value="Tech">Technology</option>
                   <option value="Music">Music</option>
+                  <option value="Theatre & Drama">Theatre & Drama</option>
+                  <option value="Stand-up Comedy">Stand-up Comedy</option>
+                  <option value="Dance Shows">Dance Shows</option>
+                  <option value="Poetry & Open Mic">Poetry & Open Mic</option>
                   <option value="Business">Business</option>
                   <option value="Art">Art & Culture</option>
                   <option value="Sports">Sports</option>
