@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 function Ticket() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeFilter, setActiveFilter] = useState("All"); // All, Active, Expire
+    const [activeFilter, setActiveFilter] = useState("All");
 
     const getTickets = async () => {
         try {
@@ -16,16 +16,11 @@ function Ticket() {
             const result = await response.json();
 
             if (response.ok && result.tickets) {
-                const formattedTickets = result.tickets.map((ticket) => ({
-                    ...ticket,
-                    eventName: ticket.eventTitle,
-                    isValid: ticket.paymentStatus === "paid"
-                }));
-
-                setData(formattedTickets);
+                setData(result.tickets);   // ← Use original data (No overwriting)
             }
         } catch (error) {
-            toast.warn("Server Error");
+            console.error(error);
+            toast.warn("Failed to load tickets");
         } finally {
             setLoading(false);
         }
@@ -41,9 +36,15 @@ function Ticket() {
 
     // Filter tickets based on activeFilter
     const filteredTickets = data.filter((ticket) => {
+        const isValid = Boolean(
+            ticket.isValid === true ||
+            ticket.isValid === "true" ||
+            ticket.isValid === 1
+        );
+
         if (activeFilter === "All") return true;
-        if (activeFilter === "Active") return ticket.isValid === true;
-        if (activeFilter === "Expire") return ticket.isValid === false;
+        if (activeFilter === "Active") return isValid;
+        if (activeFilter === "Expire") return !isValid;
         return true;
     });
 

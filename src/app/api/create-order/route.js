@@ -46,11 +46,11 @@ export async function POST(req) {
         },
         order_meta: {
           return_url:
-            "http://localhost:3000/payment-success?order_id={order_id}",
+            `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?order_id={order_id}`,
         },
       }),
     });
-
+ 
     const data = await response.json();
 
     console.log("Cashfree Response:", data);

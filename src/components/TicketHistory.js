@@ -21,15 +21,23 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
 
         updateSize();
         window.addEventListener("resize", updateSize);
-
         return () => window.removeEventListener("resize", updateSize);
     }, []);
 
+    // Correct and Robust isValid Check
+    const isValid = Boolean(
+        ticketData.isValid === true ||
+        ticketData.isValid === "true" ||
+        ticketData.isValid === 1
+    );
+
+    // Filter Logic
+    if (currentFilter === "Active" && !isValid) return null;
+    if (currentFilter === "Expire" && isValid) return null;
+
     const formatDateTime = (dateString) => {
         if (!dateString) return "N/A";
-
         const date = new Date(dateString);
-
         return (
             date.toLocaleDateString("en-IN", {
                 day: "2-digit",
@@ -45,20 +53,13 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
         );
     };
 
-    const isPaid = ticketData.paymentStatus === "paid";
-    const isTicketValid =
-        ticketData.isValid === true || ticketData.isValid === "true";
-
-    if (currentFilter === "Active" && !isTicketValid) return null;
-    if (currentFilter === "Expire" && isTicketValid) return null;
-
     const copyTicketId = () => {
         navigator.clipboard.writeText(ticketData.ticketId);
         toast.success("Ticket ID copied!");
     };
 
     const downloadQR = async () => {
-        if (!isTicketValid) {
+        if (!isValid) {
             toast.error("Ticket expired or already used");
             return;
         }
@@ -87,11 +88,12 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
             img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
         } catch (error) {
             console.error("Download failed", error);
+            toast.error("Failed to download QR");
         }
     };
 
     const shareQR = async () => {
-        if (!isTicketValid) {
+        if (!isValid) {
             toast.error("Ticket expired or already used");
             return;
         }
@@ -112,18 +114,13 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
                 const dataUrl = canvas.toDataURL("image/png");
+                const blob = await (await fetch(dataUrl)).blob();
+
+                const file = new File([blob], `Ticket_${ticketData.ticketId}.png`, {
+                    type: "image/png",
+                });
 
                 if (navigator.share) {
-                    const blob = await (await fetch(dataUrl)).blob();
-
-                    const file = new File(
-                        [blob],
-                        `Ticket_${ticketData.ticketId}.png`,
-                        {
-                            type: "image/png",
-                        }
-                    );
-
                     await navigator.share({
                         title: `${ticketData.eventTitle} Ticket`,
                         text: `🎟️ Ticket ID: ${ticketData.ticketId}`,
@@ -135,6 +132,7 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
             img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
         } catch (error) {
             console.error("Share failed", error);
+            toast.error("Failed to share ticket");
         }
     };
 
@@ -148,10 +146,7 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
                 className="flex flex-row justify-between items-center py-4 px-4 sm:px-5 shadow bg-[#2f2d2d85] rounded-2xl border border-gray-700"
             >
                 <div id={`qr-${ticketData._id}`}>
-                    <QRCode
-                        size={qrSize}
-                        value={`${ticketData.ticketId} ${ticketData.paymentStatus}`}
-                    />
+                    <QRCode size={qrSize} value={ticketData.ticketId} />
                 </div>
 
                 <div className="flex-1 mx-4 sm:mx-6 hidden sm:block">
@@ -166,12 +161,12 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
                     <div className="mt-2">
                         <span
                             className={`text-[10px] sm:text-xs px-3 py-1 rounded-full font-medium ${
-                                isTicketValid
+                                isValid
                                     ? "bg-green-500/20 text-green-400"
                                     : "bg-red-500/20 text-red-400"
                             }`}
                         >
-                            {isTicketValid ? "VALID" : "USED / EXPIRED"}
+                            {isValid ? "ACTIVE" : "EXPIRED"}
                         </span>
                     </div>
                 </div>
@@ -186,33 +181,30 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
 
                     <button
                         onClick={downloadQR}
-                        className={`${
-                            isTicketValid ? "text-blue-500" : "text-gray-500"
-                        }`}
-                        disabled={!isTicketValid}
+                        className={isValid ? "text-blue-500 hover:text-blue-400" : "text-gray-500"}
+                        disabled={!isValid}
                     >
                         <FaDownload />
                     </button>
 
                     <button
                         onClick={shareQR}
-                        className={`${
-                            isTicketValid ? "text-green-500" : "text-gray-500"
-                        }`}
-                        disabled={!isTicketValid}
+                        className={isValid ? "text-green-500 hover:text-green-400" : "text-gray-500"}
+                        disabled={!isValid}
                     >
                         <FaShareSquare />
                     </button>
 
                     <button
                         onClick={() => onDelete(ticketData._id)}
-                        className="text-red-500"
+                        className="text-red-500 hover:text-red-400"
                     >
                         <MdDelete />
                     </button>
                 </div>
             </motion.div>
 
+            {/* ====================== FULL MODAL ====================== */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/90 z-[9999] flex justify-center items-start pt-[100px] sm:pt-[120px] md:pt-[140px] p-4 overflow-y-auto">
                     <motion.div
@@ -224,7 +216,6 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
                             <h2 className="text-lg font-bold text-white truncate">
                                 {ticketData.eventTitle}
                             </h2>
-
                             <button
                                 onClick={() => setShowModal(false)}
                                 className="text-3xl text-gray-300 hover:text-white"
@@ -235,40 +226,28 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
 
                         <div className="p-6 bg-[#111] flex flex-col items-center gap-4">
                             <div className="bg-white p-4 rounded-2xl">
-                                <QRCode
-                                    size={220}
-                                    value={`${ticketData.ticketId} ${ticketData.paymentStatus}`}
-                                />
+                                <QRCode size={220} value={ticketData.ticketId} />
                             </div>
 
                             <span
                                 className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                                    isTicketValid
+                                    isValid
                                         ? "bg-green-500/20 text-green-400"
                                         : "bg-red-500/20 text-red-400"
                                 }`}
                             >
-                                {isTicketValid
-                                    ? "Valid Ticket"
-                                    : "Expired / Used Ticket"}
+                                {isValid ? "Valid Ticket" : "Expired / Used Ticket"}
                             </span>
                         </div>
 
                         <div className="p-5 space-y-5 text-white">
                             <div>
-                                <p className="text-gray-400 text-xs mb-2">
-                                    Ticket ID
-                                </p>
-
+                                <p className="text-gray-400 text-xs mb-2">Ticket ID</p>
                                 <div className="bg-[#252525] rounded-xl px-4 py-3 flex justify-between items-center">
                                     <span className="font-mono text-sm break-all">
                                         {ticketData.ticketId}
                                     </span>
-
-                                    <button
-                                        onClick={copyTicketId}
-                                        className="text-blue-400"
-                                    >
+                                    <button onClick={copyTicketId} className="text-blue-400">
                                         <FaCopy />
                                     </button>
                                 </div>
@@ -276,62 +255,33 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
 
                             <div className="grid grid-cols-2 gap-5 text-sm">
                                 <div>
-                                    <p className="text-gray-400 text-xs">
-                                        Payment
-                                    </p>
-
-                                    <p
-                                        className={`font-semibold mt-1 ${
-                                            isPaid
-                                                ? "text-green-400"
-                                                : "text-yellow-400"
-                                        }`}
-                                    >
+                                    <p className="text-gray-400 text-xs">Payment</p>
+                                    <p className={`font-semibold mt-1 ${ticketData.paymentStatus === "paid" ? "text-green-400" : "text-yellow-400"}`}>
                                         {ticketData.paymentStatus.toUpperCase()}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-400 text-xs">
-                                        Ticket Status
-                                    </p>
-
-                                    <p
-                                        className={`font-semibold mt-1 ${
-                                            isTicketValid
-                                                ? "text-green-400"
-                                                : "text-red-400"
-                                        }`}
-                                    >
-                                        {isTicketValid ? "Valid" : "Expired"}
+                                    <p className="text-gray-400 text-xs">Ticket Status</p>
+                                    <p className={`font-semibold mt-1 ${isValid ? "text-green-400" : "text-red-400"}`}>
+                                        {isValid ? "Valid" : "Expired"}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-400 text-xs">
-                                        Amount
-                                    </p>
-
-                                    <p className="mt-1">
-                                        ₹{ticketData.totalPrice}
-                                    </p>
+                                    <p className="text-gray-400 text-xs">Amount</p>
+                                    <p className="mt-1">₹{ticketData.totalPrice}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-400 text-xs">
-                                        Booked On
-                                    </p>
-
+                                    <p className="text-gray-400 text-xs">Booked On</p>
                                     <p className="text-xs text-gray-300 mt-1">
                                         {formatDateTime(ticketData.createdAt)}
                                     </p>
                                 </div>
 
                                 <div className="col-span-2">
-                                    <p className="text-gray-400 text-xs">
-                                        Location
-                                    </p>
-
+                                    <p className="text-gray-400 text-xs">Location</p>
                                     <p className="text-sm text-gray-300 mt-1 leading-relaxed">
                                         {ticketData.eventLocation}
                                     </p>
@@ -342,26 +292,26 @@ function TicketHistory({ ticketData, onDelete, currentFilter = "All" }) {
                         <div className="p-4 border-t border-gray-700 flex gap-3">
                             <button
                                 onClick={downloadQR}
-                                disabled={!isTicketValid}
+                                disabled={!isValid}
                                 className={`flex-1 py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-medium ${
-                                    isTicketValid
+                                    isValid
                                         ? "bg-blue-600 hover:bg-blue-700"
                                         : "bg-gray-700 cursor-not-allowed"
                                 }`}
                             >
-                                <FaDownload /> Download
+                                <FaDownload /> Download QR
                             </button>
 
                             <button
                                 onClick={shareQR}
-                                disabled={!isTicketValid}
+                                disabled={!isValid}
                                 className={`flex-1 py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-medium ${
-                                    isTicketValid
+                                    isValid
                                         ? "bg-green-600 hover:bg-green-700"
                                         : "bg-gray-700 cursor-not-allowed"
                                 }`}
                             >
-                                <FaShareSquare /> Share
+                                <FaShareSquare /> Share Ticket
                             </button>
                         </div>
                     </motion.div>
